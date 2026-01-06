@@ -626,4 +626,129 @@
             <img src="https://raw.githubusercontent.com/1onlysarkar0/main/main/public/logo.png" 
                  alt="1onlysarkar Logo" 
                  class="logo-img"
-                 onerror="this.style.display='none'
+                 onerror="this.style.display='none'">
+            <div class="brand-text">1ONLYSARKAR</div>
+        </div>
+        <div class="status-badge">
+            <div class="pulse-dot"></div>
+            <span>SYSTEM ACTIVE</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="console-logs">
+            <div class="log-entry"><span class="log-time">12:08:14</span> Incoming HTTP request detected...</div>
+            <div class="log-entry"><span class="log-time">12:08:15</span> Service initializing...</div>
+            <div class="log-entry"><span class="log-time">12:08:16</span> Deployment ready • All systems operational</div>
+        </div>
+
+        <div class="ascii-logo">
+▄████████    ▄████████    ▄████████    ▄█   ▄█▄    ▄████████    ▄████████
+███    ███   ███    ███   ███    ███   ███ ▄███▀   ███    ███   ███    ███
+███    █▀    ███    ███   ███    ███   ███▐██▀     ███    ███   ███    ███
+███          ███    ███  ▄███▄▄▄▄██▀  ▄█████▀      ███    ███  ▄███▄▄▄▄██▀
+▀███████████ ▀███████████ ▀▀███▀▀▀▀▀   ▀▀█████▄    ▀███████████ ▀▀███▀▀▀▀▀
+         ███   ███    ███ ▀███████████   ███▐██▄     ███    ███ ▀███████████
+   ▄█    ███   ███    ███   ███    ███   ███ ▀███▄   ███    ███   ███    ███
+ ▄████████▀    ███    █▀    ███    ███   ███   ▀█▀   ███    █▀    ███    ███
+                            ███    ███   ▀                         ███    ███
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-label">Loading Status</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="domain-info-card">
+            <div class="domain-label">Current Subdomain</div>
+            <div class="domain-name" id="subdomain-display">Loading...</div>
+            <div class="owner-section" id="owner-info">
+                Checking status...
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Powered by <a href="https://1onlysarkar.shop" class="footer-link">1ONLYSARKAR</a> • Premium Domain Services
+    </div>
+
+    <script>
+        // Subdomain Detection
+        function initSubdomainDetection() {
+            const hostname = window.location.hostname;
+            const parts = hostname.split('.');
+            
+            let subdomain = '';
+            let fullDomain = hostname;
+            
+            if (parts.length > 2) {
+                subdomain = parts[0];
+                fullDomain = hostname;
+            } else {
+                subdomain = 'main';
+                fullDomain = hostname;
+            }
+            
+            // Animated domain display
+            setTimeout(() => {
+                document.getElementById('subdomain-display').textContent = fullDomain;
+            }, 500);
+            
+            checkOwnerStatus(subdomain);
+        }
+        
+        // Check Owner Status
+        async function checkOwnerStatus(subdomain) {
+            const ownerElement = document.getElementById('owner-info');
+            
+            try {
+                const response = await fetch(`/api/check/${subdomain}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.owner) {
+                        ownerElement.innerHTML = `Reserved for <span class="owner-name">${data.owner}</span>`;
+                    } else {
+                        ownerElement.innerHTML = `<span class="available-badge">✨ Available for Reservation</span>`;
+                    }
+                } else {
+                    throw new Error('API not available');
+                }
+            } catch (error) {
+                ownerElement.innerHTML = `<span class="available-badge">⚡ Subdomain Ready</span>`;
+            }
+        }
+        
+        // Interactive Mouse Movement Effect
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.domain-info-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                    e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                } else {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                }
+            });
+        });
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initSubdomainDetection);
+    </script>
+</body>
+</html>
