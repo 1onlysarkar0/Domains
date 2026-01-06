@@ -13,17 +13,11 @@ services:
       - coolify
     labels:
       - traefik.enable=true
-      - traefik.http.routers.sarkar-https.rule=HostRegexp(`^.+.1onlysarkar.shop$$`)
-      - traefik.http.routers.sarkar-https.priority=10
-      - traefik.http.routers.sarkar-https.entryPoints=https
-      - traefik.http.routers.sarkar-https.tls=true
-      - traefik.http.routers.sarkar-https.tls.certresolver=letsencrypt
-      - traefik.http.routers.sarkar-https.middlewares=gzip
-      - traefik.http.routers.sarkar-https.service=sarkar-service
-      - traefik.http.routers.sarkar-http.rule=HostRegexp(`^.+.1onlysarkar.shop$$`)
-      - traefik.http.routers.sarkar-http.priority=10
-      - traefik.http.routers.sarkar-http.entryPoints=http
-      - traefik.http.routers.sarkar-http.middlewares=redirect-to-https
-      - traefik.http.middlewares.gzip.compress=true
-      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      - traefik.http.routers.sarkar-catch.rule=HostRegexp(`^.+\.1onlysarkar\.shop$$`)
+      - traefik.http.routers.sarkar-catch.priority=1
+      - traefik.http.routers.sarkar-catch.entrypoints=https
+      - traefik.http.routers.sarkar-catch.tls=true
+      - traefik.http.routers.sarkar-catch.tls.certresolver=letsencrypt
+      - traefik.http.routers.sarkar-catch.service=sarkar-service
       - traefik.http.services.sarkar-service.loadbalancer.server.port=80
+      
