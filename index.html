@@ -1,33 +1,370 @@
-const express = require('express');
-const app = express();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1onlysarkar - Premium Domain Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0d0d0d;
+            color: #e5e5e5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f1f1f;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .brand-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d9ff 0%, #00a3cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        
+        .status-badge {
+            background: #1a1a1a;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 12px;
+            color: #00d9ff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #00d9ff;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1; 
+                transform: scale(1); 
+                box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.7);
+            }
+            50% { 
+                opacity: 0.6; 
+                transform: scale(0.95); 
+                box-shadow: 0 0 0 10px rgba(0, 217, 255, 0);
+            }
+        }
+        
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 24px;
+        }
+        
+        .console-logs {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .log-entry {
+            margin: 10px 0;
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .log-entry:nth-child(1) { animation-delay: 0.3s; }
+        .log-entry:nth-child(2) { animation-delay: 0.7s; }
+        .log-entry:nth-child(3) { animation-delay: 1.1s; }
+        
+        .log-time {
+            color: #00d9ff;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .ascii-logo {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #00d9ff;
+            white-space: pre;
+            line-height: 1.2;
+            margin: 30px 0;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+            text-align: center;
+        }
+        
+        .progress-section {
+            width: 100%;
+            max-width: 700px;
+            margin: 35px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #0099cc, #00d9ff);
+            background-size: 200% 100%;
+            width: 0%;
+            animation: loading 2.5s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { 
+                width: 0%; 
+                background-position: 0% 50%; 
+            }
+            50% { 
+                width: 75%; 
+                background-position: 100% 50%; 
+            }
+            100% { 
+                width: 100%; 
+                background-position: 0% 50%; 
+            }
+        }
+        
+        .domain-info-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #151515 100%);
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 36px 48px;
+            margin-top: 40px;
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .domain-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        
+        .domain-name {
+            font-size: 28px;
+            color: #00d9ff;
+            font-weight: 700;
+            word-break: break-all;
+            margin-bottom: 24px;
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+        }
+        
+        .owner-section {
+            font-size: 16px;
+            color: #aaa;
+            padding-top: 24px;
+            border-top: 1px solid #2a2a2a;
+        }
+        
+        .owner-name {
+            color: #00d9ff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .available-badge {
+            display: inline-block;
+            background: rgba(0, 217, 255, 0.1);
+            color: #00d9ff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+        
+        .footer {
+            padding: 24px;
+            text-align: center;
+            border-top: 1px solid #1f1f1f;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .footer-link {
+            color: #00d9ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .logo-img {
+                height: 32px;
+            }
+            
+            .brand-text {
+                font-size: 20px;
+            }
+            
+            .ascii-logo {
+                font-size: 8px;
+            }
+            
+            .domain-info-card {
+                padding: 28px 24px;
+            }
+            
+            .domain-name {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/1onlysarkar0/main/main/public/logo.png" 
+                 alt="1onlysarkar Logo" 
+                 class="logo-img"
+                 onerror="this.style.display='none'">
+            <div class="brand-text">1ONLYSARKAR</div>
+        </div>
+        <div class="status-badge">
+            <div class="pulse-dot"></div>
+            <span>SYSTEM ACTIVE</span>
+        </div>
+    </div>
 
-// Simple in-memory storage (replace with DB in production)
-const customers = {
-    "rahul": { owner: "Rahul Kumar", date: "2026-01-05" },
-    "priya": { owner: "Priya Sharma", date: "2026-01-06" }
-};
+    <div class="main-container">
+        <div class="console-logs">
+            <div class="log-entry"><span class="log-time">12:08:14</span> → Incoming HTTP request detected...</div>
+            <div class="log-entry"><span class="log-time">12:08:15</span> → Service initializing...</div>
+            <div class="log-entry"><span class="log-time">12:08:16</span> → Deployment ready • All systems operational</div>
+        </div>
 
-app.get('/api/check/:subdomain', (req, res) => {
-    const subdomain = req.params.subdomain;
-    const customer = customers[subdomain];
+        <div class="ascii-logo">
+   ▄████████    ▄████████    ▄████████    ▄█   ▄█▄    ▄████████    ▄████████ 
+  ███    ███   ███    ███   ███    ███   ███ ▄███▀   ███    ███   ███    ███ 
+  ███    █▀    ███    ███   ███    ███   ███▐██▀     ███    ███   ███    ███ 
+  ███          ███    ███  ▄███▄▄▄▄██▀  ▄█████▀      ███    ███  ▄███▄▄▄▄██▀ 
+▀███████████ ▀███████████ ▀▀███▀▀▀▀▀   ▀▀█████▄    ▀███████████ ▀▀███▀▀▀▀▀   
+         ███   ███    ███ ▀███████████   ███▐██▄     ███    ███ ▀███████████ 
+   ▄█    ███   ███    ███   ███    ███   ███ ▀███▄   ███    ███   ███    ███ 
+ ▄████████▀    ███    █▀    ███    ███   ███   ▀█▀   ███    █▀    ███    ███ 
+                            ███    ███   ▀                         ███    ███
+        </div>
 
-    if (customer) {
-        res.json({ owner: customer.owner, reserved: true });
-    } else {
-        res.json({ owner: null, reserved: false });
-    }
-});
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
 
-// Add new customer (admin only)
-app.post('/api/add', express.json(), (req, res) => {
-    const { subdomain, owner, adminKey } = req.body;
+        <div class="domain-info-card">
+            <div class="domain-label">Current Subdomain</div>
+            <div class="domain-name" id="subdomain-display">Loading...</div>
+            <div class="owner-section" id="owner-info">
+                Checking status...
+            </div>
+        </div>
+    </div>
 
-    if (adminKey !== process.env.ADMIN_KEY) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+    <div class="footer">
+        Powered by <a href="https://1onlysarkar.shop" class="footer-link">1ONLYSARKAR</a> • Premium Domain Services
+    </div>
 
-    customers[subdomain] = { owner, date: new Date().toISOString() };
-    res.json({ success: true });
-});
-
-app.listen(3000, () => console.log('API running on port 3000'));
+    <script>
+        function initSubdomainDetection() {
+            const hostname = window.location.hostname;
+            const parts = hostname.split('.');
+            
+            let subdomain = '';
+            let fullDomain = hostname;
+            
+            if (parts.length > 2) {
+                subdomain = parts[0];
+                fullDomain = hostname;
+            } else {
+                subdomain = 'main';
+                fullDomain = hostname;
+            }
+            
+            document.getElementById('subdomain-display').textContent = fullDomain;
+            checkOwnerStatus(subdomain);
+        }
+        
+        async function checkOwnerStatus(subdomain) {
+            const ownerElement = document.getElementById('owner-info');
+            
+            try {
+                const response = await fetch(`/api/check/${subdomain}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.owner) {
+                        ownerElement.innerHTML = `Reserved for <span class="owner-name">${data.owner}</span>`;
+                    } else {
+                        ownerElement.innerHTML = `<span class="available-badge">✨ Available for Reservation</span>`;
+                    }
+                } else {
+                    throw new Error('API not available');
+                }
+            } catch (error) {
+                ownerElement.innerHTML = `<span class="available-badge">⚡ Subdomain Ready</span>`;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', initSubdomainDetection);
+    </script>
+</body>
+</html>
