@@ -1,0 +1,33 @@
+const express = require('express');
+const app = express();
+
+// Simple in-memory storage (replace with DB in production)
+const customers = {
+    "rahul": { owner: "Rahul Kumar", date: "2026-01-05" },
+    "priya": { owner: "Priya Sharma", date: "2026-01-06" }
+};
+
+app.get('/api/check/:subdomain', (req, res) => {
+    const subdomain = req.params.subdomain;
+    const customer = customers[subdomain];
+
+    if (customer) {
+        res.json({ owner: customer.owner, reserved: true });
+    } else {
+        res.json({ owner: null, reserved: false });
+    }
+});
+
+// Add new customer (admin only)
+app.post('/api/add', express.json(), (req, res) => {
+    const { subdomain, owner, adminKey } = req.body;
+
+    if (adminKey !== process.env.ADMIN_KEY) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    customers[subdomain] = { owner, date: new Date().toISOString() };
+    res.json({ success: true });
+});
+
+app.listen(3000, () => console.log('API running on port 3000'));
